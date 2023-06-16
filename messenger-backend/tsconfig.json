@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2016",                          
-    "module": "commonjs",                    
-    "lib": ["es6"],                     
+    "target": "es2016",
+    "module": "commonjs",
+    "lib": ["es6"],
     "allowJs": true,
-    "outDir": "build",                          
+    "outDir": "build",
     "rootDir": "src",
-    "strict": true,         
+    "strict": true,
+    "baseUrl": "./src",
+    "paths": { "@/*": ["*"] },
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true
