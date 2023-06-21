@@ -1,17 +1,77 @@
 'use client';
+
 import { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 type Variant = 'REGISTER' | 'LOGIN';
 
+type FormFields = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export default function AuthForm() {
   const [variant, setVariant] = useState<Variant>('LOGIN');
+  const router = useRouter();
 
   const toggleVariant = () => {
     variant === 'LOGIN' ? setVariant('REGISTER') : setVariant('LOGIN');
   };
 
+  // Form Handler
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormFields>({
+    defaultValues: { name: '', password: '', email: '' },
+  });
+
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    if (variant === 'REGISTER') {
+      if (!data) {
+        return null;
+      }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/register`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
+      console.log(res.json());
+    }
+
+    if (variant === 'LOGIN') {
+      if (!data) {
+        return null;
+      }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/login`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
+      console.log(res.json());
+      if (res.status === 200) {
+        router.push('/home');
+      }
+    }
+  };
+
   return (
-    <form className='mt-10  mx-3 sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-y-4'>
+    <form
+      className='mt-10  mx-3 sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-y-4'
+      onSubmit={handleSubmit(onSubmit)}
+    >
       {/* Name for REGISTER ONLY */}
       {variant === 'REGISTER' && (
         <div>
@@ -24,9 +84,9 @@ export default function AuthForm() {
           <div>
             <input
               id='name'
-              name='name'
               type='text'
               required
+              {...register('name')}
               className='block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>
@@ -44,7 +104,7 @@ export default function AuthForm() {
         <div>
           <input
             id='email'
-            name='email'
+            {...register('email')}
             type='email'
             required
             className='block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
@@ -62,7 +122,7 @@ export default function AuthForm() {
         <div className='mt-2'>
           <input
             id='password'
-            name='password'
+            {...register('password')}
             type='password'
             required
             className='block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
@@ -75,7 +135,7 @@ export default function AuthForm() {
           type='submit'
           className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
         >
-          Sign in
+          {variant === 'LOGIN' ? 'Sign In' : 'Sign Up'}
         </button>
       </div>
       {/* Divider */}
@@ -103,7 +163,7 @@ export default function AuthForm() {
               d='M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z'
             ></path>
           </svg>
-          Sign in with Google
+          {variant === 'LOGIN' ? 'Sign In with Google' : 'Sign Up with Google'}
         </button>
 
         <button
@@ -125,7 +185,7 @@ export default function AuthForm() {
               d='M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z'
             ></path>
           </svg>
-          Sign in with Github
+          {variant === 'LOGIN' ? 'Sign In with Github' : 'Sign Up with Github'}
         </button>
       </div>
       {/* Variant Toggle */}
@@ -135,7 +195,7 @@ export default function AuthForm() {
       >
         {variant === 'LOGIN'
           ? 'New to Messenger? Create an account'
-          : 'Already have an account? Login'}
+          : 'Already have an account? Sign in'}
       </div>
     </form>
   );
