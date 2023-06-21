@@ -7,7 +7,8 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 
 // Import Routes
-import ApiRoutes from '@/routes/Api.routes'
+import AuthRoutes from '@/routes/api/auth/auth.routes'
+import HomeRoutes from '@/routes/home/home.routes'
 
 // Import Middlewares
 import { errorHandler } from '@/middlewares/errors/error-handler';
@@ -20,8 +21,13 @@ const app: Express = express();
 app.use(express.json());
 
 
-// Routes
-app.use('/api', ApiRoutes)
+// Routes /api
+app.use('/api/auth', AuthRoutes)
+
+
+// Routes /home
+
+app.use('/home', HomeRoutes)
 
 // Errors Middlewares
 app.use(specificErrorHandler);
