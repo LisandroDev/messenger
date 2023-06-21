@@ -1,7 +1,11 @@
-import { Request, Response , NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
-
-export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-    console.error(err);
-    res.status(500).send('Unexpected Error');
-  } 
+export function errorHandler(
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.error(err);
+  res.status(500).json('Unexpected Error');
+}
