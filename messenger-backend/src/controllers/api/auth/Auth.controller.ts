@@ -43,6 +43,13 @@ export class AuthController {
       .cookie('jwt_token', user.token, { httpOnly: true, domain: 'localhost' })
       .send(user);
   }
+
+  public async logout(req: Request, res: Response): Promise<Response> {
+    return res
+      .status(200)
+      .clearCookie('jwt_token')
+      .json({ message: 'Cookie cleared' });
+  }
 }
 
 export default new AuthController();

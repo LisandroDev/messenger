@@ -12,9 +12,13 @@ const router = express.Router();
 router.post('/register', (req: Request, res: Response) =>
   AuthController.register(req, res)
 );
+
 router.post('/login', (req: Request, res: Response) =>
   AuthController.login(req, res)
 );
 
+router.post('/logout', (req: Request, res: Response) =>
+  AuthController.logout(req, res)
+);
 
-export default router
+export default router;
