@@ -11,6 +11,10 @@
     "paths": { "@/*": ["*"] },
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": ["./types"]
+  },
+  "ts-node": {
+    "files": true
   }
 }
