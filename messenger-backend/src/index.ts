@@ -10,6 +10,7 @@ import cors from 'cors';
 // Import Routes
 import AuthRoutes from '@/routes/api/auth/auth.routes';
 import HomeRoutes from '@/routes/home/home.routes';
+import ChatRoutes from '@/routes/api/chat/chat.routes'
 
 // Import Middlewares
 import { errorHandler } from '@/middlewares/errors/error-handler';
@@ -24,6 +25,7 @@ app.use(cors({ origin: process.env.FRONTEND_SERVER, credentials: true }));
 
 // Routes /api
 app.use('/api/auth', AuthRoutes);
+app.use('/api/chat', ChatRoutes)
 
 // Routes /home
 

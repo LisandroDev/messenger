@@ -11,10 +11,29 @@ datasource db {
 }
 
 model User {
+  id            Int            @id @unique @default(autoincrement())
+  email         String         @unique
+  name          String
+  password      String
+  conversations Conversation[]
+  messages      Message[]
+}
 
-  id Int @id @unique @default(autoincrement())
-  email String @unique
-  name String
-  password String
+model Conversation {
+  id       Int       @id @unique @default(autoincrement())
+  userIds  Int[]
+  users    User[]
+  isGroup  Boolean   @default(false)
+  messages Message[]
+}
 
+model Message {
+  id   Int     @id @unique @default(autoincrement())
+  body String?
+
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  sender   User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId Int  @default(34)
 }
