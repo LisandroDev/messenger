@@ -61,6 +61,26 @@ export class ChatPersistenceService {
     return newMessage;
   }
 
+  public async getInformationOfConversation(
+    req: Request,
+    res: Response
+  ): Promise<{ name: string; avatarUrl: string }> {
+    const { conversationId } = req.params;
+    const userId = Number(req.userId);
+
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: Number(conversationId) },
+      include: { users: true },
+    });
+
+    const friend = conversation?.users.find((user) => user.id !== userId);
+    if (!friend) {
+      throw new BadRequestError('Friend information cant be find');
+    }
+    console.log(friend);
+    return { name: friend.name, avatarUrl: '' };
+  }
+
   public async getConversations(userId: User['id']): Promise<Conversation[]> {
     const user = await prisma.user.findUnique({
       where: { id: userId },

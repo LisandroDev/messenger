@@ -20,4 +20,8 @@ ChatController.getMessages(req, res))
 router.get('/getConversations',(req: Request, res: Response) =>
 ChatController.getConversations(req, res))
 
+router.get('/getInfoOfConversation/:conversationId', (req: Request, res: Response) => {
+  ChatController.getInformationOfConversation(req, res)
+})
+
 export default router

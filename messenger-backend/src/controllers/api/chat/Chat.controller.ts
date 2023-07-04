@@ -49,6 +49,27 @@ export class ChatController {
 
     return res.json({ conversations: conversations });
   }
+
+  public async getInformationOfConversation(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    const { conversationId } = req.params;
+
+    if (!conversationId) {
+      throw new BadRequestError('Conversation id was not provided');
+    }
+
+    const userId = Number(req.userId);
+    if (!userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const information =
+      await ChatPersistenceService.getInformationOfConversation(req, res);
+
+    return res.json(information);
+  }
 }
 
 export default new ChatController();
