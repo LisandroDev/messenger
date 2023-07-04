@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 
 interface ConversationBadgeProps {
@@ -10,6 +8,7 @@ interface ConversationBadgeProps {
 interface Information {
   name: string;
   avatarUrl: string;
+  lastMessage: { body: string };
 }
 
 export default function ConversationBadge({
@@ -33,17 +32,17 @@ export default function ConversationBadge({
   }, [id]);
 
   return (
-    <div className='max-w-max bg-slate-200 rounded-lg'>
+    <div className='w-full  rounded-lg'>
       <button
         onClick={() => {
           onSelect(id);
         }}
-         className='flex items-center p-8 h-12 '
+        className='flex w-full px-3 justify-evenly items-center  h-12 '
       >
         <div>
           {information?.avatarUrl || (
-            <div className='avatar'>
-              <div className='h-12 rounded-full'>
+            <div className='avatar offline'>
+              <div className='h-8 rounded-full ring  ring-offset-base-100 ring-offset-2'>
                 <img
                   src='https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png'
                   alt='default avatar'
@@ -52,7 +51,15 @@ export default function ConversationBadge({
             </div>
           )}
         </div>
-        {information && information.name}
+        <div className='max-w-sm text-center flex flex-col  '>
+          <span className='text-sm font-bold'>
+            {' '}
+            {information && information.name}
+          </span>
+          <span className='text-xs'>
+            {information && information.lastMessage.body}
+          </span>
+        </div>
       </button>
     </div>
   );
