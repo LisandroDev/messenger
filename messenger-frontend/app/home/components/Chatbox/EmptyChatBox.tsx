@@ -1,6 +1,6 @@
 export default function EmptyChatBox() {
   return (
-    <section className='w-full  grow flex-1 p-8 flex flex-col  justify-end text-neutral-900 bg-slate-200'>
+    <section className='w-full  grow flex-1 p-8 flex flex-col  justify-end text-neutral-900 bg-[url("https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg")]'>
       <div className='text-center  my-64'>
         <h1> No conversation selected! </h1>
       </div>

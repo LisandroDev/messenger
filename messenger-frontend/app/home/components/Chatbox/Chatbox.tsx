@@ -1,14 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import MessageSent from './MessageSent';
+import MessageReceived from './MessageReceived';
 
 interface ChatBoxProps {
   id: String;
 }
 
+interface Message {
+  body: string;
+  createdAt: string;
+  id: string;
+  sender: boolean;
+}
+
 export default function ChatBox({ id }: ChatBoxProps) {
-  const [messages, setMessages] = useState([]);
-  const [createMessage, setCreateMessage] = useState('');
+  const [messages, setMessages] = useState<Array<Message>>([]);
+  const [messageToSend, setMessageToSend] = useState('');
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -44,44 +53,44 @@ export default function ChatBox({ id }: ChatBoxProps) {
     const response = await res.json();
   };
 
-  const messageSent = (message: string) => {
-    return (
-      <div className='chat chat-end'>
-        <div className='chat-bubble bg-[#aad8a1] text-black'>{message}</div>
-      </div>
-    );
-  };
-
-  const messageReceived = (message: string) => {
-    return (
-      <div className='chat chat-start'>
-        <div className='chat-bubble bg-white text-black'>{message}</div>
-      </div>
-    );
-  };
-
   const handleChange = (e: any) => {
-    setCreateMessage(e.currentTarget.value);
+    setMessageToSend(e.currentTarget.value);
   };
+
+  const handleSubmit = () => {
+    sentMessage(messageToSend);
+    setMessageToSend('');
+  }
 
   return (
-    <section className='w-full  grow flex-1 p-8 flex flex-col  justify-end text-neutral-900 bg-slate-200'>
+    <section className='w-full  grow flex-1 p-8 flex flex-col bg-[url("https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg")] justify-end text-neutral-900 '>
       {messages &&
         messages.map((message) =>
-          message.sender
-            ? messageSent(message.body)
-            : messageReceived(message.body)
+          message.sender ? (
+            <MessageSent
+              key={message.id}
+              message={message.body}
+              date={message.createdAt}
+            />
+          ) : (
+            <MessageReceived
+              key={message.id}
+              message={message.body}
+              date={message.createdAt}
+            />
+          )
         )}
       <div className='divider'></div>
       <div className='flex flex-col gap-y-4 items-center sm:flex-row justify-center  gap-x-8 p-8 bg-slate-300  border-'>
         <input
           onChange={handleChange}
+          value={messageToSend}
           type='text'
           placeholder='Type here'
           className='input input-bordered input-sm w-full max-w-md'
         />
         <button
-          onClick={() => sentMessage(createMessage)}
+          onClick={handleSubmit}
           className='btn btn-xs sm:btn-md btn-primary'
         >
           Send message
