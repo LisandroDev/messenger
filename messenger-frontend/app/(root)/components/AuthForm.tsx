@@ -51,18 +51,22 @@ export default function AuthForm() {
       if (!data) {
         return null;
       }
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/login`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+      try{
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/login`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }
+        );
+        console.log(res.json());
+        if (res.status === 200) {
+          router.push('/home');
         }
-      );
-      console.log(res.json());
-      if (res.status === 200) {
-        router.push('/home');
+      } catch(error){
+        console.error('Fail at login')
       }
     }
   };

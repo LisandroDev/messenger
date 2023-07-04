@@ -1,27 +1,40 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import ChatBox from '@/app/home/components/Chatbox/Chatbox';
+import Sidebar from '@/app/home/components/Sidebar/Sidebar';
+import EmptyChatBox from '@/app/home/components/Chatbox/EmptyChatBox';
+import { Conversation } from '@/app/types/interfaces';
+import { fetchConversations } from '@/app/home/utils/getConversations';
 
-export default async function Home() {
-  const router = useRouter();
+export default function App() {
+  const [conversations, setConversations] = useState<Conversation[]>();
+  const [selectedConversation, setSelectedConversation] = useState<string>();
+ 
 
-  const onLogout = async () => {
-    const res = await fetch('http://localhost:3002/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-
-    if (res.status == 200) {
-      router.push('/');
-    }
+  const onSelect = (value: string) => {
+    setSelectedConversation(value);
   };
 
+  useEffect(() => {
+    fetchConversations().then((response) => {
+      setConversations(response.conversations);
+
+    });
+  }, []);
+
   return (
-    <div className='  text-cyan-500'>
-      <p>Home Page</p>
-      <button onClick={() => onLogout()} className=' text-blue-950 bg-black'>
-        Logout
-      </button>
-    </div>
+    <main className='flex-1 flex max-w-full flex-row  gap-y-8 text-cyan-500'>
+      <Sidebar onSelect={onSelect} Conversations={conversations || []} />
+      {selectedConversation ? (
+        <ChatBox
+          key={selectedConversation}
+          friendId={'2'} 
+          id={selectedConversation}
+        />
+      ) : (
+        <EmptyChatBox />
+      )}
+    </main>
   );
 }
