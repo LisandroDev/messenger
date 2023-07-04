@@ -31,6 +31,8 @@ model Message {
   id   Int     @id @unique @default(autoincrement())
   body String?
 
+  createdAt DateTime @default(now())
+
   conversationId Int
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
