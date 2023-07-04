@@ -10,6 +10,7 @@ interface SidebarProps{
 
 
 export default function Sidebar({Conversations, onSelect}: SidebarProps){
+
     return (
         <aside className="hidden  lg:flex lg:flex-col p-8  gap-y-8 w-1/6 bg-[#F8F8F8] text-black">
             <input></input>
