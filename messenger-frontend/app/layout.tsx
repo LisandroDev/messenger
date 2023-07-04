@@ -1,7 +1,9 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
+import { Rubik } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
+const rubik = Rubik({weight: ['400','500','800'],subsets:['latin'],style:['italic','normal']})
 
 export const metadata = {
   title: 'Fake Messenger',
@@ -14,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
-      <body className={inter.className}>{children}</body>
+    <html className={rubik.className} lang='en'>
+      <body className={rubik.className}>{children}</body>
     </html>
   );
 }
