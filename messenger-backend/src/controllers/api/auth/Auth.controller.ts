@@ -40,7 +40,10 @@ export class AuthController {
 
     return res
       .status(200)
-      .cookie('jwt_token', user.token, { httpOnly: true, domain: process.env.AUTH_DOMAIN })
+      .cookie('jwt_token', user.token, {
+        httpOnly: true,
+        domain: process.env.AUTH_DOMAIN,
+      })
       .send(user);
   }
 

@@ -14,7 +14,7 @@ router.post('/createMessage', (req: Request, res: Response) =>
   ChatController.createMessage(req, res)
 );
 
-router.get('/getMessages', (req: Request, res: Response) =>
+router.get('/getMessages/:conversationId', (req: Request, res: Response) =>
 ChatController.getMessages(req, res))
 
 router.get('/getConversations',(req: Request, res: Response) =>

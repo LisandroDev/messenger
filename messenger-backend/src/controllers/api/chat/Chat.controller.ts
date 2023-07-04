@@ -1,6 +1,5 @@
-import prisma from '@/database/client';
 import {
-  ExistenceConflictError,
+  BadRequestError,
   UnauthorizedError,
 } from '@/middlewares/errors/specific-handler';
 
@@ -9,18 +8,33 @@ import ChatPersistenceService from '@/services/api/chat/ChatPersistence.service'
 
 export class ChatController {
   public async createMessage(req: Request, res: Response): Promise<Response> {
+    const { conversationId } = req.body;
     if (!req.userId) {
       throw new UnauthorizedError('Unauthorized');
     }
-
-    const message = await ChatPersistenceService.saveMessage(req, res);
-
-    return res.json(message);
+    if (conversationId) {
+      const messageOnExistentConversation =
+        await ChatPersistenceService.saveMessageOnExistentConversation(
+          req,
+          res
+        );
+      return res.json(messageOnExistentConversation);
+    } else {
+      const messageNewConversation =
+        await ChatPersistenceService.saveMessageOnNewConversation(req, res);
+      return res.json(messageNewConversation);
+    }
   }
 
   public async getMessages(req: Request, res: Response): Promise<Response> {
-    const sender = await ChatPersistenceService.getMessages(req, res);
-    return res.json(sender);
+    const { conversationId } = req.params;
+
+    if (!conversationId) {
+      throw new BadRequestError('Conversation id was not provided');
+    }
+
+    const messages = await ChatPersistenceService.getMessages(req, res);
+    return res.json({ messages: messages });
   }
 
   public async getConversations(
@@ -33,8 +47,7 @@ export class ChatController {
     }
     const conversations = await ChatPersistenceService.getConversations(userId);
 
-    return res.json(conversations)
-
+    return res.json({ conversations: conversations });
   }
 }
 

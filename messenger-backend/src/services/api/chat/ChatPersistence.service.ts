@@ -1,28 +1,62 @@
 import prisma from '@/database/client';
+import {
+  BadRequestError,
+  UnauthorizedError,
+} from '@/middlewares/errors/specific-handler';
 import { Conversation, Message, User } from '@prisma/client';
 import { Request, Response } from 'express';
+import { MessageWithSender } from '@/types/custom';
 
 export class ChatPersistenceService {
-  public async saveMessage(req: Request, res: Response) {
-    const senderId = Number(req.userId);
-    const { receiverId, messageBody } = req.body;
+  public async saveMessageOnNewConversation(req: Request, res: Response) {
+    const fromId = Number(req.userId);
+    const { toEmail, messageBody } = req.body;
 
-    const isNewConversation = await this.isNewConversation(
-      senderId,
-      receiverId
-    );
+    const userToSend = await prisma.user.findUnique({
+      where: { email: toEmail },
+      select: { id: true },
+    });
 
-    const newConversation =
-      isNewConversation ||
-      (await this.createConversation(senderId, receiverId));
+    if (!userToSend) {
+      throw new Error('This user does not exist!');
+    }
+
+    const toId = userToSend.id;
+
+    const existentConversation = await this.getConversation(fromId, toId);
+
+    const conversation =
+      existentConversation || (await this.createConversation(fromId, toId));
+
+    if (!existentConversation) {
+      await this.updateUsers(conversation.id, fromId, toId);
+    }
 
     const newMessage = await this.createMessage(
-      senderId,
+      fromId,
       messageBody,
-      newConversation.id
+      conversation.id
     );
 
-    const updateUser = await this.updateUser(newConversation.id, senderId);
+    return newMessage;
+  }
+
+  public async saveMessageOnExistentConversation(req: Request, res: Response) {
+    const { messageBody, conversationId } = req.body;
+    const fromId = Number(req.userId);
+    const existentConversation = await prisma.conversation.findFirst({
+      where: { id: Number(conversationId), userIds: { has: fromId } },
+    });
+
+    if (!existentConversation) {
+      throw new BadRequestError('Conversation does not exist');
+    }
+
+    const newMessage = await this.createMessage(
+      fromId,
+      messageBody,
+      existentConversation.id
+    );
 
     return newMessage;
   }
@@ -40,31 +74,43 @@ export class ChatPersistenceService {
     return user?.conversations;
   }
 
-  public async getMessages(req: Request, res: Response): Promise<Message[]> {
-    const { conversationId } = req.body;
+  public async getMessages(
+    req: Request,
+    res: Response
+  ): Promise<Array<MessageWithSender>> {
+    const { conversationId } = req.params;
     const userId = Number(req.userId);
 
     if (!userId) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedError('Unauthorized');
     }
     const conversation = await prisma.conversation.findFirst({
-      where: { id: conversationId, userIds: { has: userId } },
+      where: { id: Number(conversationId), userIds: { has: userId } },
       include: { messages: true },
     });
 
     if (!conversation) {
-      throw new Error('User not found');
+      throw new UnauthorizedError('Unauthorized');
     }
 
-    return conversation.messages;
+    type MessageWithSender = Message & { sender: boolean };
+    const conversationResponse: Array<MessageWithSender> = [];
+
+    conversation.messages.map((message) => {
+      message.senderId === userId
+        ? conversationResponse.push({ ...message, sender: true })
+        : conversationResponse.push({ ...message, sender: false });
+    });
+
+    return conversationResponse;
   }
 
-  private async isNewConversation(
+  private async getConversation(
     senderId: User['id'],
     receiverId: User['id']
   ): Promise<Conversation | null> {
     const conversation = await prisma.conversation.findFirst({
-      where: { userIds: { equals: [senderId, receiverId] } },
+      where: { userIds: { hasEvery: [senderId, receiverId] } },
     });
     return conversation || null;
   }
@@ -95,16 +141,26 @@ export class ChatPersistenceService {
     return newMessage;
   }
 
-  private async updateUser(
+  private async updateUsers(
     conversationId: Conversation['id'],
-    senderId: User['id']
+    fromId: User['id'],
+    toId: User['id']
   ): Promise<User> {
-    const updateUser = await prisma.user.update({
-      where: { id: senderId },
+    // Update Sender User
+    const updateSenderUser = await prisma.user.update({
+      where: { id: fromId },
       data: { conversations: { connect: { id: conversationId } } },
       include: { conversations: true },
     });
-    return updateUser;
+
+    // Update Receiver User
+    await prisma.user.update({
+      where: { id: toId },
+      data: { conversations: { connect: { id: conversationId } } },
+      include: { conversations: true },
+    });
+
+    return updateSenderUser;
   }
 }
 
