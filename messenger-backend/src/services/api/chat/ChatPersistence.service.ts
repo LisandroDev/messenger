@@ -6,6 +6,7 @@ import {
 import { Conversation, Message, User } from '@prisma/client';
 import { Request, Response } from 'express';
 import { MessageWithSender } from '@/types/custom';
+import ChatSocketService from './ChatSocket.service';
 
 export class ChatPersistenceService {
   public async saveMessageOnNewConversation(req: Request, res: Response) {
@@ -38,6 +39,13 @@ export class ChatPersistenceService {
       conversation.id
     );
 
+    ChatSocketService.emitMessageToAllUsersIdsOnConversation(
+      fromId,
+      conversation.id,
+      conversation.userIds,
+      newMessage
+    );
+
     return newMessage;
   }
 
@@ -58,13 +66,20 @@ export class ChatPersistenceService {
       existentConversation.id
     );
 
+    ChatSocketService.emitMessageToAllUsersIdsOnConversation(
+      fromId,
+      existentConversation.id,
+      existentConversation.userIds,
+      newMessage
+    );
+
     return newMessage;
   }
 
   public async getInformationOfConversation(
     req: Request,
     res: Response
-  ): Promise<{ name: string; avatarUrl: string; lastMessage: Message | ''}> {
+  ): Promise<{ name: string; avatarUrl: string; lastMessage: Message | '' }> {
     const { conversationId } = req.params;
     const userId = Number(req.userId);
 

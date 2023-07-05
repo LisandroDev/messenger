@@ -2,6 +2,7 @@ import {
   BadRequestError,
   UnauthorizedError,
 } from '@/middlewares/errors/specific-handler';
+import { io, connectedUsers } from '@/index';
 
 import { Request, Response } from 'express';
 import ChatPersistenceService from '@/services/api/chat/ChatPersistence.service';
@@ -33,6 +34,16 @@ export class ChatController {
       throw new BadRequestError('Conversation id was not provided');
     }
 
+    if (!req.userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const socket = connectedUsers.get(Number(req.userId));
+    if (socket) {
+      // Socket with the specified userId found
+      socket.join(conversationId)
+    }
+
     const messages = await ChatPersistenceService.getMessages(req, res);
     return res.json({ messages: messages });
   }
@@ -54,21 +65,26 @@ export class ChatController {
     req: Request,
     res: Response
   ): Promise<Response> {
-    const { conversationId } = req.params;
+    try{
+      const { conversationId } = req.params;
 
-    if (!conversationId) {
-      throw new BadRequestError('Conversation id was not provided');
+      if (!conversationId) {
+        throw new BadRequestError('Conversation id was not provided');
+      }
+  
+      const userId = Number(req.userId);
+      if (!userId) {
+        throw new UnauthorizedError('Unauthorized');
+      }
+  
+      const information =
+        await ChatPersistenceService.getInformationOfConversation(req, res);
+  
+      return res.json(information);
+    } catch(error){
+      return res.json({error: '500'})
     }
 
-    const userId = Number(req.userId);
-    if (!userId) {
-      throw new UnauthorizedError('Unauthorized');
-    }
-
-    const information =
-      await ChatPersistenceService.getInformationOfConversation(req, res);
-
-    return res.json(information);
   }
 }
 
