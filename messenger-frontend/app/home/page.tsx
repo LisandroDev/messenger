@@ -6,6 +6,7 @@ import Sidebar from '@/app/home/components/Sidebar/Sidebar';
 import ModalSideBar from './components/Sidebar/ModalSidebar';
 import EmptyChatBox from '@/app/home/components/Chatbox/EmptyChatBox';
 import { Conversation } from '@/app/types/interfaces';
+import socket from './socket/socket';
 import { fetchConversations } from '@/app/home/utils/getConversations';
 
 export default function App() {
@@ -13,9 +14,16 @@ export default function App() {
   const [selectedConversation, setSelectedConversation] = useState<string>();
   const [isDesktop, setDesktop] = useState<boolean>(true);
 
-  const onSelect = (value: string) => {
-    setSelectedConversation(value);
-  };
+  useEffect(() => {
+
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     fetchConversations().then((response) => {
@@ -23,12 +31,16 @@ export default function App() {
     });
   }, []);
 
+  const onSelect = (value: string) => {
+    setSelectedConversation(value);
+  };
+
   const updateMedia = () => {
     setDesktop(window.innerWidth > 1024);
   };
 
   useEffect(() => {
-    if(window){
+    if (window) {
       window.addEventListener('resize', updateMedia);
       return () => window.removeEventListener('resize', updateMedia);
     }

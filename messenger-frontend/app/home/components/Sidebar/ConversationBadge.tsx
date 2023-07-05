@@ -1,4 +1,6 @@
+'use client'
 import { useEffect, useState } from 'react';
+import socket from '../../socket/socket';
 
 interface ConversationBadgeProps {
   id: string;
@@ -9,6 +11,7 @@ interface Information {
   name: string;
   avatarUrl: string;
   lastMessage: { body: string };
+  online: boolean;
 }
 
 export default function ConversationBadge({
@@ -16,6 +19,7 @@ export default function ConversationBadge({
   onSelect,
 }: ConversationBadgeProps) {
   const [information, setInformation] = useState<Information>();
+  const [lastMessageFromSocket, setLastMessageFromSocket] = useState<string>('')
 
   useEffect(() => {
     const fetchInformation = async () => {
@@ -30,6 +34,15 @@ export default function ConversationBadge({
     };
     fetchInformation();
   }, [id]);
+
+  useEffect(() => {
+    socket.on(`${id}-badge`, (data: any) => {
+      console.log(data.body)
+      setLastMessageFromSocket(data.body)
+    })
+  }, [id]);
+
+
 
   return (
     <div className='w-full  rounded-lg'>
@@ -57,7 +70,7 @@ export default function ConversationBadge({
             {information && information.name}
           </span>
           <span className='text-xs'>
-            {information && information.lastMessage.body}
+            {lastMessageFromSocket || information?.lastMessage.body}
           </span>
         </div>
       </button>
