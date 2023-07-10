@@ -1,6 +1,7 @@
 import { Conversation } from '@/app/types/interfaces';
 import ConversationBadge from './ConversationBadge';
 import CreateConversation from './CreateConversation';
+import { Fragment } from 'react';
 
 interface SidebarProps {
   Conversations: Conversation[];
@@ -17,14 +18,14 @@ export default function Sidebar({ Conversations, onSelect }: SidebarProps) {
       <div className='divider'></div>
       {Conversations &&
         Conversations.map((conversation) => (
-          <>
+          <Fragment key={String(conversation.id)}>
             <ConversationBadge
               onSelect={onSelect}
-              key={String(conversation.id)}
+              
               id={String(conversation.id)}
             />
-            <div className='divider'></div>{' '}
-          </>
+            <div  className='divider'></div>{' '}
+          </Fragment>
         ))}
     </aside>
   );
