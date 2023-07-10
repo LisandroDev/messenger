@@ -37,18 +37,17 @@ app.use('/api/chat', ChatRoutes);
 
 app.use('/home', HomeRoutes);
 
-// Errors Middlewares
-
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:3000', credentials: true },
+  cors: { origin: process.env.FRONTEND_SERVER, credentials: true },
 });
 
 
 // Add user id to socket
 io.use(authenticateSocketToken);
 
+// Errors Middlewares
 app.use(specificErrorHandler);
 app.use(errorHandler);
 
