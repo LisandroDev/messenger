@@ -79,7 +79,7 @@ export class ChatPersistenceService {
   public async getInformationOfConversation(
     req: Request,
     res: Response
-  ): Promise<{ name: string; avatarUrl: string; lastMessage: Message | '' }> {
+  ): Promise<{ name: string; avatarUrl: string; lastMessage: Message | {body: ''}; friendId: number }> {
     const { conversationId } = req.params;
     const userId = Number(req.userId);
 
@@ -88,7 +88,7 @@ export class ChatPersistenceService {
       include: {
         users: true,
         messages: { take: -1 },
-      },
+      }, 
     });
 
     const friend = conversation?.users.find((user) => user.id !== userId);
@@ -98,8 +98,9 @@ export class ChatPersistenceService {
 
     return {
       name: friend.name,
+      friendId: friend.id,
       avatarUrl: '',
-      lastMessage: conversation?.messages ? conversation.messages[0] : '',
+      lastMessage: conversation?.messages ? conversation.messages[0] : {body: ''},
     };
   }
 

@@ -22,6 +22,15 @@ export class ChatSocketService {
 
     return;
   }
+
+  public async isFriendOnline(friendId: number){
+    const isFriendOnline = connectedUsers.get(friendId);
+    if(isFriendOnline){
+      return true
+    } else {
+      return false
+    }
+  }
 }
 
 export default new ChatSocketService();

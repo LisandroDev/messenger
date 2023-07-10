@@ -66,6 +66,7 @@ io.on('connection', (socket: CustomSocket) => {
   });
 
   socket.on('disconnect', () => {
+    connectedUsers.delete(Number(userId))
     console.log('Socket disconnected:', socket.id);
   });
 });

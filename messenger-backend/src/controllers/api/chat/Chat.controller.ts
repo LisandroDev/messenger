@@ -6,6 +6,7 @@ import { io, connectedUsers } from '@/index';
 
 import { Request, Response } from 'express';
 import ChatPersistenceService from '@/services/api/chat/ChatPersistence.service';
+import ChatSocketService from '@/services/api/chat/ChatSocket.service';
 
 export class ChatController {
   public async createMessage(req: Request, res: Response): Promise<Response> {
@@ -79,9 +80,12 @@ export class ChatController {
   
       const information =
         await ChatPersistenceService.getInformationOfConversation(req, res);
-  
-      return res.json(information);
+
+      const isFriendOnline = await ChatSocketService.isFriendOnline(information.friendId);
+
+      return res.json({...information, online: isFriendOnline});
     } catch(error){
+      console.error(error)
       return res.json({error: '500'})
     }
 
