@@ -1,6 +1,7 @@
 import prisma from '@/database/client';
 import {
   BadRequestError,
+  ExistenceConflictError,
   UnauthorizedError,
 } from '@/middlewares/errors/specific-handler';
 import { Conversation, Message, User } from '@prisma/client';
@@ -49,6 +50,35 @@ export class ChatPersistenceService {
     return newMessage;
   }
 
+  public async createNewConversation(req: Request, res: Response) {
+    const fromId = Number(req.userId);
+    const { toEmail } = req.body;
+
+    const userToSend = await prisma.user.findUnique({
+      where: { email: toEmail },
+      select: { id: true },
+    });
+
+    if (!userToSend) {
+      throw new BadRequestError('User does not exist')
+    }
+
+    const toId = userToSend.id;
+
+    const existentConversation = await this.getConversation(fromId, toId);
+
+    const conversation =
+      existentConversation || (await this.createConversation(fromId, toId));
+
+    if (existentConversation) {
+      throw new ExistenceConflictError('Conversation Already Exists');
+    }
+
+    await this.updateUsers(conversation.id, fromId, toId);
+
+    return conversation;
+  }
+
   public async saveMessageOnExistentConversation(req: Request, res: Response) {
     const { messageBody, conversationId } = req.body;
     const fromId = Number(req.userId);
@@ -82,6 +112,8 @@ export class ChatPersistenceService {
   ): Promise<{ name: string; avatarUrl: string; lastMessage: Message | {body: ''}; friendId: number }> {
     const { conversationId } = req.params;
     const userId = Number(req.userId);
+
+  
 
     const conversation = await prisma.conversation.findUnique({
       where: { id: Number(conversationId) },

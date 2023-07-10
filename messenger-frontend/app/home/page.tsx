@@ -39,6 +39,13 @@ export default function App() {
     setDesktop(window.innerWidth > 1024);
   };
 
+  const addConversation = (conversation: Conversation) => {
+    if(conversations && conversation){
+      const conversationsClone = [...conversations, conversation]
+      setConversations(conversationsClone)
+    }
+  }
+
   useEffect(() => {
     if (window) {
       window.addEventListener('resize', updateMedia);
@@ -49,7 +56,7 @@ export default function App() {
   return (
     <main className='flex-1 flex max-w-full flex-row  gap-y-8 text-cyan-500'>
       {isDesktop ? (
-        <Sidebar onSelect={onSelect} Conversations={conversations || []} />
+        <Sidebar onSelect={onSelect} addConversation={addConversation} Conversations={conversations || []} />
       ) : (
         <ModalSideBar onSelect={onSelect} Conversations={conversations || []} />
       )}

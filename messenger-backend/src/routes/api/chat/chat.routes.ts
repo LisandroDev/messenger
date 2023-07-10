@@ -8,20 +8,29 @@ import ChatController from '@/controllers/api/chat/Chat.controller';
 
 const router = express.Router();
 
-router.use(authenticateToken)
+router.use(authenticateToken);
 
 router.post('/createMessage', (req: Request, res: Response) =>
   ChatController.createMessage(req, res)
 );
 
 router.get('/getMessages/:conversationId', (req: Request, res: Response) =>
-ChatController.getMessages(req, res))
+  ChatController.getMessages(req, res)
+);
 
-router.get('/getConversations',(req: Request, res: Response) =>
-ChatController.getConversations(req, res))
+router.get('/getConversations', (req: Request, res: Response) =>
+  ChatController.getConversations(req, res)
+);
 
-router.get('/getInfoOfConversation/:conversationId', (req: Request, res: Response) => {
-  ChatController.getInformationOfConversation(req, res)
-})
+router.get(
+  '/getInfoOfConversation/:conversationId',
+  (req: Request, res: Response) => {
+    ChatController.getInformationOfConversation(req, res);
+  }
+);
 
-export default router
+router.post('/createConversation', (req: Request, res: Response) => {
+  ChatController.createConversation(req, res);
+});
+
+export default router;

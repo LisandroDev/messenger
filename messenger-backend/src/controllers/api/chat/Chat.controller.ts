@@ -28,6 +28,22 @@ export class ChatController {
     }
   }
 
+  public async createConversation(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    if (!req.userId) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+
+    const newConversation = await ChatPersistenceService.createNewConversation(
+      req,
+      res
+    );
+
+    return res.json(newConversation);
+  }
+
   public async getMessages(req: Request, res: Response): Promise<Response> {
     const { conversationId } = req.params;
 
@@ -42,7 +58,7 @@ export class ChatController {
     const socket = connectedUsers.get(Number(req.userId));
     if (socket) {
       // Socket with the specified userId found
-      socket.join(conversationId)
+      socket.join(conversationId);
     }
 
     const messages = await ChatPersistenceService.getMessages(req, res);
@@ -66,29 +82,30 @@ export class ChatController {
     req: Request,
     res: Response
   ): Promise<Response> {
-    try{
+    try {
       const { conversationId } = req.params;
 
       if (!conversationId) {
         throw new BadRequestError('Conversation id was not provided');
       }
-  
+
       const userId = Number(req.userId);
       if (!userId) {
         throw new UnauthorizedError('Unauthorized');
       }
-  
+
       const information =
         await ChatPersistenceService.getInformationOfConversation(req, res);
 
-      const isFriendOnline = await ChatSocketService.isFriendOnline(information.friendId);
+      const isFriendOnline = await ChatSocketService.isFriendOnline(
+        information.friendId
+      );
 
-      return res.json({...information, online: isFriendOnline});
-    } catch(error){
-      console.error(error)
-      return res.json({error: '500'})
+      return res.json({ ...information, online: isFriendOnline });
+    } catch (error) {
+      console.error(error);
+      return res.json({ error: '500' });
     }
-
   }
 }
 

@@ -1,8 +1,15 @@
 'use client';
 
 import { useState } from "react";
+import { Conversation } from '@/app/types/interfaces';
 
-function CreateConversation() {
+interface CreateConversationProps{
+  addConversation: (conversation: Conversation) => void;
+}
+
+
+
+function CreateConversation({addConversation}: CreateConversationProps) {
   const [email, setEmail] = useState('');
 
   const handleChange = (e: any) => {
@@ -13,7 +20,7 @@ function CreateConversation() {
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_BACKEND_SERVER as string
-      }/api/chat/createMessage`,
+      }/api/chat/createConversation`,
       {
         credentials: 'include',
         method: 'POST',
@@ -26,7 +33,15 @@ function CreateConversation() {
         }),
       }
     );
+
+    if(!res.ok){
+      console.log('Error at create');
+      console.log(res);
+    }
     const response = await res.json();
+    console.log(response)
+    addConversation(response)
+
   };
 
   return (
