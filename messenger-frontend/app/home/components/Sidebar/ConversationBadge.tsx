@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import socket from '../../socket/socket';
 
@@ -12,6 +12,7 @@ interface Information {
   avatarUrl: string;
   lastMessage: { body: string };
   online: boolean;
+  friendId: number;
 }
 
 export default function ConversationBadge({
@@ -19,7 +20,10 @@ export default function ConversationBadge({
   onSelect,
 }: ConversationBadgeProps) {
   const [information, setInformation] = useState<Information>();
-  const [lastMessageFromSocket, setLastMessageFromSocket] = useState<string>('')
+  const [lastMessageFromSocket, setLastMessageFromSocket] =
+    useState<string>('');
+  const [notification, setNotification] = useState<boolean>(false);
+  const [messageCounter, setMessageCounter] = useState<number>(0);
 
   useEffect(() => {
     const fetchInformation = async () => {
@@ -37,29 +41,49 @@ export default function ConversationBadge({
 
   useEffect(() => {
     socket.on(`${id}-badge`, (data: any) => {
-      console.log(data.body)
-      setLastMessageFromSocket(data.body)
-    })
-  }, [id]);
+      console.log(data);
+      if (information?.friendId === data.senderId) {
+        setNotification(true);
+        setMessageCounter(messageCounter + 1);
+      }
+      setLastMessageFromSocket(data.body);
+    });
+  }, [id, messageCounter, information]);
 
-
+  useEffect(() => {
+    if (information) {
+      socket.on(String(information?.friendId), (data: any) => {
+        const informationClone = {...information, online: data}
+        setInformation(informationClone)
+      });
+    }
+  }, [information]);
 
   return (
-    <div className='w-full  rounded-lg'>
+    <div className='w-full rounded-lg'>
       <button
         onClick={() => {
           onSelect(id);
+          setNotification(false);
+          setMessageCounter(0);
         }}
         className='flex w-full px-3 justify-evenly items-center  h-12 '
       >
         <div>
           {information?.avatarUrl || (
-            <div className='avatar offline'>
-              <div className='h-8 rounded-full ring  ring-offset-base-100 ring-offset-2'>
-                <img
-                  src='https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png'
-                  alt='default avatar'
-                />
+            <div
+              className={
+                information?.online ? 'avatar online' : 'avatar offline'
+              }
+            >
+              <div className={`h-8 rounded-full ring  ring-offset-base-100 ${information?.online ? 'ring-success' : ''}  ring-offset-2`}>
+                {
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src='https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png'
+                    alt='default avatar'
+                  />
+                }
               </div>
             </div>
           )}
@@ -69,9 +93,18 @@ export default function ConversationBadge({
             {' '}
             {information && information.name}
           </span>
-          <span className='text-xs'>
-            {lastMessageFromSocket || information?.lastMessage.body}
+          <span className='text-xs truncate  w-20'>
+            {lastMessageFromSocket
+              ? lastMessageFromSocket
+              : information && information?.lastMessage?.body}
           </span>
+        </div>
+        <div>
+          {notification && (
+            <div className='badge badge-success badge-xs p-2'>
+              +{messageCounter}
+            </div>
+          )}
         </div>
       </button>
     </div>

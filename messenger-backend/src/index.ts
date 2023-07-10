@@ -9,6 +9,8 @@ import cors from 'cors';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
 
+import ChatSocketService from './services/api/chat/ChatSocket.service';
+
 // Import Routes
 import AuthRoutes from '@/routes/api/auth/auth.routes';
 import HomeRoutes from '@/routes/home/home.routes';
@@ -56,7 +58,8 @@ const connectedUsers = new Map<number, CustomSocket>();
 io.on('connection', (socket: CustomSocket) => {
   const userId = socket.userId;
   if (userId) {
-    connectedUsers.set(Number(userId), socket); // Map the socket to the userId
+    connectedUsers.set(Number(userId), socket); 
+    ChatSocketService.emitRefreshOfOnlineStatus(Number(userId), true);
   }
   console.log('A new socket connection is established:', socket.id);
   socket.on('message', (data: any) => {
@@ -67,6 +70,7 @@ io.on('connection', (socket: CustomSocket) => {
 
   socket.on('disconnect', () => {
     connectedUsers.delete(Number(userId))
+    ChatSocketService.emitRefreshOfOnlineStatus(Number(userId), false);
     console.log('Socket disconnected:', socket.id);
   });
 });

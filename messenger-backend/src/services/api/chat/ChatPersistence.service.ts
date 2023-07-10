@@ -19,7 +19,7 @@ export class ChatPersistenceService {
     });
 
     if (!userToSend) {
-      throw new Error('This user does not exist!');
+      throw new BadRequestError('User does not exist')
     }
 
     const toId = userToSend.id;

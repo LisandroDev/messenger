@@ -23,6 +23,11 @@ export class ChatSocketService {
     return;
   }
 
+  public async emitRefreshOfOnlineStatus(fromId: number, isOnline: boolean){
+      io.emit(String(fromId), isOnline);
+    return;
+  }
+
   public async isFriendOnline(friendId: number){
     const isFriendOnline = connectedUsers.get(friendId);
     if(isFriendOnline){
