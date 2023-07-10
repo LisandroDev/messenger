@@ -93,8 +93,8 @@ export default function ChatBox({ id }: ChatBoxProps) {
   }
 
   return (
-    <section className='w-full  grow flex-1 p-8 flex flex-col bg-[url("https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg")] justify-end text-neutral-900 '>
-      <div className='max-h-[40rem] overflow-auto mb-8' >
+    <section className='w-full grow  flex-1 p-8 flex flex-col bg-[url("https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg")] justify-end text-neutral-900 '>
+      <div className='max-h-[40rem] overflow-auto overflow-x-hidden mb-8  w-full' >
       {messages &&
         messages.map((message) =>
           message.sender ? (
