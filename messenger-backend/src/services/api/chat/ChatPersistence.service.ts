@@ -20,7 +20,7 @@ export class ChatPersistenceService {
     });
 
     if (!userToSend) {
-      throw new BadRequestError('User does not exist')
+      throw new BadRequestError('User does not exist');
     }
 
     const toId = userToSend.id;
@@ -60,7 +60,7 @@ export class ChatPersistenceService {
     });
 
     if (!userToSend) {
-      throw new BadRequestError('User does not exist')
+      throw new BadRequestError('User does not exist');
     }
 
     const toId = userToSend.id;
@@ -74,7 +74,10 @@ export class ChatPersistenceService {
       throw new ExistenceConflictError('Conversation Already Exists');
     }
 
+   
     await this.updateUsers(conversation.id, fromId, toId);
+
+    await ChatSocketService.emitNewConversationToFriend(conversation, toId);
 
     return conversation;
   }
@@ -109,20 +112,22 @@ export class ChatPersistenceService {
   public async getInformationOfConversation(
     req: Request,
     res: Response
-  ): Promise<{ name: string; avatarUrl: string; lastMessage: Message | {body: ''}; friendId: number }> {
+  ): Promise<{
+    name: string;
+    avatarUrl: string;
+    lastMessage: Message | { body: '' };
+    friendId: number;
+  }> {
     const { conversationId } = req.params;
     const userId = Number(req.userId);
-
-  
 
     const conversation = await prisma.conversation.findUnique({
       where: { id: Number(conversationId) },
       include: {
         users: true,
-        messages: { take: -1 }
-      }, 
+        messages: { take: -1 },
+      },
     });
-
 
     const friend = conversation?.users.find((user) => user.id !== userId);
     if (!friend) {
@@ -133,7 +138,9 @@ export class ChatPersistenceService {
       name: friend.name,
       friendId: friend.id,
       avatarUrl: '',
-      lastMessage: conversation?.messages ? conversation.messages[0] : {body: ''},
+      lastMessage: conversation?.messages
+        ? conversation.messages[0]
+        : { body: '' },
     };
   }
 

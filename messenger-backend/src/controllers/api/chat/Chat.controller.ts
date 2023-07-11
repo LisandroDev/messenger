@@ -40,6 +40,7 @@ export class ChatController {
       req,
       res
     );
+    
 
     return res.json(newConversation);
   }
@@ -73,6 +74,7 @@ export class ChatController {
     if (!userId) {
       throw new UnauthorizedError('Unauthorized');
     }
+    
     const conversations = await ChatPersistenceService.getConversations(userId);
 
     return res.json({ conversations: conversations });
@@ -85,7 +87,7 @@ export class ChatController {
     try {
       const { conversationId } = req.params;
 
-      if (!conversationId) {    
+      if (!conversationId) {
         throw new BadRequestError('Conversation id was not provided');
       }
 
@@ -97,9 +99,11 @@ export class ChatController {
       const information =
         await ChatPersistenceService.getInformationOfConversation(req, res);
 
-      const isFriendOnline = await ChatSocketService.isFriendOnline(
-        information.friendId
-      );
+
+      const isFriendOnline =
+        information.friendId === userId
+          ? true
+          : await ChatSocketService.isFriendOnline(information.friendId);
 
       return res.json({ ...information, online: isFriendOnline });
     } catch (error) {
