@@ -3,7 +3,7 @@ import { Conversation } from '@/app/types/interfaces';
 import ConversationBadge from './ConversationBadge';
 import CreateConversation from './CreateConversation';
 import { Fragment } from 'react';
-
+import { Suspense } from 'react';
 interface SidebarProps {
   Conversations: Conversation[];
   onSelect: (value: string) => void;
@@ -24,12 +24,12 @@ export default function Sidebar({ Conversations, onSelect, addConversation }: Si
           <Fragment key={String(conversation.id)}>
             <ConversationBadge
               onSelect={onSelect}
-              
               id={String(conversation.id)}
             />
             <div  className='divider'></div>{' '}
           </Fragment>
         ))}
     </aside>
+
   );
 }

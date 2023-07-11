@@ -85,7 +85,7 @@ export class ChatController {
     try {
       const { conversationId } = req.params;
 
-      if (!conversationId) {
+      if (!conversationId) {    
         throw new BadRequestError('Conversation id was not provided');
       }
 

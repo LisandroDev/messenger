@@ -119,9 +119,10 @@ export class ChatPersistenceService {
       where: { id: Number(conversationId) },
       include: {
         users: true,
-        messages: { take: -1 },
+        messages: { take: -1 }
       }, 
     });
+
 
     const friend = conversation?.users.find((user) => user.id !== userId);
     if (!friend) {

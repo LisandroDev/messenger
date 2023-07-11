@@ -40,24 +40,32 @@ export default function ConversationBadge({
   }, [id]);
 
   useEffect(() => {
-    socket.on(`${id}-badge`, (data: any) => {
-      console.log(data);
-      if (information?.friendId === data.senderId) {
+    const manageNotification = (data: any) => {
+      if (
+        information?.friendId === data.senderId &&
+        localStorage.getItem('conversationOpen') !== id
+      ) {
         setNotification(true);
-        setMessageCounter(messageCounter + 1);
+        setMessageCounter((messageCounter) => messageCounter + 1);
       }
       setLastMessageFromSocket(data.body);
-    });
-  }, [id, messageCounter, information]);
+    };
 
-  useEffect(() => {
-    if (information) {
-      socket.on(String(information?.friendId), (data: any) => {
-        const informationClone = {...information, online: data}
-        setInformation(informationClone)
-      });
-    }
-  }, [information]);
+    const manageOnlineStatusOfFriend = (data: any) => {
+      if (information) {
+        const informationClone = { ...information, online: data };
+        setInformation(informationClone);
+      }
+    };
+
+    socket.on(`${id}-badge`, manageNotification);
+    socket.on(String(information?.friendId), manageOnlineStatusOfFriend);
+
+    return () => {
+      socket.off(`${id}-badge`, manageNotification);
+      socket.off(String(information?.friendId), manageOnlineStatusOfFriend);
+    };
+  }, [id, information]);
 
   return (
     <div className='w-full rounded-lg'>
@@ -66,6 +74,8 @@ export default function ConversationBadge({
           onSelect(id);
           setNotification(false);
           setMessageCounter(0);
+          localStorage.removeItem('conversationOpen');
+          localStorage.setItem('conversationOpen', id);
         }}
         className='flex w-full px-3 justify-evenly items-center  h-12 '
       >
@@ -76,7 +86,11 @@ export default function ConversationBadge({
                 information?.online ? 'avatar online' : 'avatar offline'
               }
             >
-              <div className={`h-8 rounded-full ring  ring-offset-base-100 ${information?.online ? 'ring-success' : ''}  ring-offset-2`}>
+              <div
+                className={`h-8 rounded-full ring  ring-offset-base-100 ${
+                  information?.online ? 'ring-success' : ''
+                }  ring-offset-2`}
+              >
                 {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img

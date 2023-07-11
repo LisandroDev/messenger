@@ -8,14 +8,14 @@ import EmptyChatBox from '@/app/home/components/Chatbox/EmptyChatBox';
 import { Conversation } from '@/app/types/interfaces';
 import socket from './socket/socket';
 import { fetchConversations } from '@/app/home/utils/getConversations';
+import { Suspense } from 'react';
 
 export default function App() {
   const [conversations, setConversations] = useState<Conversation[]>();
-  const [selectedConversation, setSelectedConversation] = useState<string>();
+  const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [isDesktop, setDesktop] = useState<boolean>(true);
 
   useEffect(() => {
-
     socket.on('connect', () => {
       console.log('Socket connected:', socket.id);
     });
@@ -40,11 +40,12 @@ export default function App() {
   };
 
   const addConversation = (conversation: Conversation) => {
-    if(conversations && conversation){
-      const conversationsClone = [...conversations, conversation]
-      setConversations(conversationsClone)
+    if (conversations && conversation) {
+      const conversationsClone = [...conversations, conversation];
+      setConversations(conversationsClone);
+      setSelectedConversation(String(conversation.id));
     }
-  }
+  };
 
   useEffect(() => {
     if (window) {
@@ -56,7 +57,11 @@ export default function App() {
   return (
     <main className='flex-1 flex max-w-full flex-row  gap-y-8 text-cyan-500'>
       {isDesktop ? (
-        <Sidebar onSelect={onSelect} addConversation={addConversation} Conversations={conversations || []} />
+        <Sidebar
+          onSelect={onSelect}
+          addConversation={addConversation}
+          Conversations={conversations || []}
+        />
       ) : (
         <ModalSideBar onSelect={onSelect} Conversations={conversations || []} />
       )}

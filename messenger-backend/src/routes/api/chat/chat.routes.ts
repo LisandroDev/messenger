@@ -16,7 +16,7 @@ router.post('/createMessage', (req: Request, res: Response) =>
 
 router.get('/getMessages/:conversationId', (req: Request, res: Response) =>
   ChatController.getMessages(req, res)
-);
+); 
 
 router.get('/getConversations', (req: Request, res: Response) =>
   ChatController.getConversations(req, res)
@@ -34,3 +34,4 @@ router.post('/createConversation', (req: Request, res: Response) => {
 });
 
 export default router;
+ 
