@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import socket from '../../socket/socket';
+import { toast } from 'react-toastify'
+
 
 interface ConversationBadgeProps {
   id: string;
@@ -26,17 +28,20 @@ export default function ConversationBadge({
   const [messageCounter, setMessageCounter] = useState<number>(0);
 
   useEffect(() => {
-    const fetchInformation = async () => {
-      const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BACKEND_SERVER as string
-        }/api/chat/getInfoOfConversation/${id}`,
-        { credentials: 'include', method: 'GET', cache: 'default' }
-      );
-      const resInfo = await res.json();
-      setInformation(resInfo);
-    };
-    fetchInformation();
+      const fetchInformation = async () => {
+        const res = await fetch(
+          `${
+            process.env.NEXT_PUBLIC_BACKEND_SERVER as string
+          }/api/chat/getInfoOfConversation/${id}`,
+          { credentials: 'include', method: 'GET', cache: 'default' }
+        );
+        const resInfo = await res.json();
+        setInformation(resInfo);
+      };
+      fetchInformation().catch((error) => {
+        toast.error('Error at fetching conversation information')
+      });
+
   }, [id]);
 
   useEffect(() => {

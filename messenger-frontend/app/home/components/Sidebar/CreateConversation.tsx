@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Conversation } from '@/app/types/interfaces';
-
+import {toast} from 'react-toastify'
 interface CreateConversationProps{
   addConversation: (conversation: Conversation) => void;
 }
@@ -17,30 +17,32 @@ function CreateConversation({addConversation}: CreateConversationProps) {
   };
 
   const createConversation = async (email: string) => {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BACKEND_SERVER as string
-      }/api/chat/createConversation`,
-      {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          toEmail: email,
-          messageBody: '',
-        }),
+    try{ 
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_BACKEND_SERVER as string
+        }/api/chat/createConversation`,
+        {
+          credentials: 'include',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            toEmail: email,
+            messageBody: '',
+          }),
+        }
+      );
+  
+      if(!res.ok){
+        toast.error('Error at create conversation')
       }
-    );
-
-    if(!res.ok){
-      console.log('Error at create');
-      console.log(res);
+      const response = await res.json();
+      addConversation(response)
+    } catch(error) {
+      toast.error('Error at create conversation')
     }
-    const response = await res.json();
-    console.log(response)
-    addConversation(response)
 
   };
 
@@ -53,7 +55,8 @@ function CreateConversation({addConversation}: CreateConversationProps) {
       ></input>
       <button
         className='btn btn-sm btn-info'
-        onClick={() => {
+        onClick={(e) => { 
+          e.preventDefault();
           createConversation(email);
         }}
       >

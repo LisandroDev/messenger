@@ -5,15 +5,17 @@ import CreateConversation from './CreateConversation';
 interface ModalSidebarProps {
   Conversations: Conversation[];
   onSelect: (value: string) => void;
+  addConversation: (conversation: Conversation) => void;
 }
 
-export default function ModalSideBar({ Conversations, onSelect }: ModalSidebarProps) {
+export default function ModalSideBar({ Conversations, onSelect , addConversation}: ModalSidebarProps) {
   return (
+    <>
     <dialog id='my_modal_5' className='modal modal-bottom sm:modal-middle'>
       <form method='dialog' className='modal-box'>
         <aside className='flex  w-full flex-col items-center   text-black'>
           <div className='p-4'>
-            <CreateConversation />
+            <CreateConversation  addConversation={addConversation}/>
           </div>
           <div className='divider'></div>
           {Conversations &&
@@ -34,5 +36,6 @@ export default function ModalSideBar({ Conversations, onSelect }: ModalSidebarPr
         </div>
       </form>
     </dialog>
+    </>
   );
 }

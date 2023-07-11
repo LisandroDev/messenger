@@ -8,7 +8,7 @@ import EmptyChatBox from '@/app/home/components/Chatbox/EmptyChatBox';
 import { Conversation } from '@/app/types/interfaces';
 import socket from './socket/socket';
 import { fetchConversations } from '@/app/home/utils/getConversations';
-import { Suspense } from 'react';
+import { toast } from 'react-toastify';
 
 export default function App() {
   const [conversations, setConversations] = useState<Conversation[]>();
@@ -26,9 +26,26 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetchConversations().then((response) => {
-      setConversations(response.conversations);
-    });
+    const addConversationFromSocket = (data: Conversation) => {
+      if (conversations && data) {
+        const conversationsClone = [...conversations, data];
+        setConversations(conversationsClone);
+        setSelectedConversation(String(data.id));
+      }
+    };
+    socket.on('new-conversation', addConversationFromSocket);
+
+    return () => {
+      socket.off('new-conversation', addConversationFromSocket);
+    };
+  }, [conversations]);
+
+  useEffect(() => {
+    fetchConversations()
+      .then((response) => {
+        setConversations(response.conversations);
+      })
+      .catch((error) => toast.error('Error at fetching conversations'));
   }, []);
 
   const onSelect = (value: string) => {
@@ -49,6 +66,7 @@ export default function App() {
 
   useEffect(() => {
     if (window) {
+      updateMedia();
       window.addEventListener('resize', updateMedia);
       return () => window.removeEventListener('resize', updateMedia);
     }
@@ -63,7 +81,11 @@ export default function App() {
           Conversations={conversations || []}
         />
       ) : (
-        <ModalSideBar onSelect={onSelect} Conversations={conversations || []} />
+        <ModalSideBar
+          addConversation={addConversation}
+          onSelect={onSelect}
+          Conversations={conversations || []}
+        />
       )}
       {selectedConversation ? (
         <ChatBox key={selectedConversation} id={selectedConversation} />
