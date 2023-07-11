@@ -15,5 +15,5 @@ export default function Logout() {
     }
   };
 
-  return <button onClick={() => onLogout()} className='btn btn-sm'>Logout</button>;
+  return <button onClick={() => onLogout()} className='btn btn-xs sm:btn sm:btn-sm'>Logout</button>;
 }

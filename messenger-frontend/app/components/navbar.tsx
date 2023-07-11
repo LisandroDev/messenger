@@ -7,17 +7,17 @@ export default function Navbar() {
     <header className='navbar  border-b-2 '>
       <div className='flex-1'>
         <div className='flex'>
-          <OpenModalSideBar />
-             
+        <OpenModalSideBar />
         
-          <a className='btn btn-ghost normal-case text-xl'><Image
+          <a className='btn btn-ghost normal-case sm:text-xl'><Image
             height='24'
             width='44'
-            className='mx-auto w-auto'
+            className='mx-auto sm:w-auto w-8'
             src='/images/messengerlogo.png'
             alt='Logo'
-          />Messenger</a>
+          /> <p className=' text-sm font-normal'>Messenger</p></a>
         </div>
+
       </div>
       <div className='flex-none'>
 

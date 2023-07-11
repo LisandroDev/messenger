@@ -4,6 +4,7 @@ import { useEffect, useState, useRef} from 'react';
 import MessageSent from './MessageSent';
 import MessageReceived from './MessageReceived';
 import socket from '../../socket/socket';
+import { toast } from 'react-toastify';
 
 interface ChatBoxProps {
   id: String;
@@ -42,7 +43,7 @@ export default function ChatBox({ id }: ChatBoxProps) {
       const resMessages = await res.json();
       setMessages(resMessages.messages);
     };
-    fetchMessages();
+    fetchMessages().catch((error) => toast.error('Fail at fetch messages'));
   }, [id]);
 
   useEffect(() => {
@@ -55,25 +56,28 @@ export default function ChatBox({ id }: ChatBoxProps) {
   }, [id]);
 
   const sentMessage = async (message: string) => {
-    setLastMessageSent(message);
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BACKEND_SERVER as string
-      }/api/chat/createMessage`,
-      {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          conversationId: id,
-          messageBody: message,
-        }),
+    try{ setLastMessageSent(message);
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_BACKEND_SERVER as string
+        }/api/chat/createMessage`,
+        {
+          credentials: 'include',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            conversationId: id,
+            messageBody: message,
+          }),
+        }
+      );
+      const response = await res.json();
+      addMessage(response) } catch(error) {
+        toast.error('Fail at send message')
       }
-    );
-    const response = await res.json();
-    addMessage(response)
+   
   };
 
   const handleChange = (e: any) => {
