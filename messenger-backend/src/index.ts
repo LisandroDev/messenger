@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
-
+import next from 'next';
 import ChatSocketService from './services/api/chat/ChatSocket.service';
 
 // Import Routes
@@ -29,20 +29,10 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_SERVER, credentials: true }));
 
-// Routes /api
-app.use('/api/auth', AuthRoutes);
-app.use('/api/chat', ChatRoutes);
-
-// Routes /home
-
-app.use('/home', HomeRoutes);
-
-
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: process.env.FRONTEND_SERVER, credentials: true },
 });
-
 
 // Add user id to socket
 io.use(authenticateSocketToken);
@@ -51,13 +41,23 @@ io.use(authenticateSocketToken);
 app.use(specificErrorHandler);
 app.use(errorHandler);
 
+const dev = process.env.NODE_ENV === 'production';
+const nextApp = next({ dev: false, port: 3006 });
+const handle = nextApp.getRequestHandler();
+
 // Connection to socket
 const connectedUsers = new Map<number, CustomSocket>();
+
+// Routes /api
+  app.use('/api/auth', AuthRoutes);
+  app.use('/api/chat', ChatRoutes);
+
+// Routes /home
 
 io.on('connection', (socket: CustomSocket) => {
   const userId = socket.userId;
   if (userId) {
-    connectedUsers.set(Number(userId), socket); 
+    connectedUsers.set(Number(userId), socket);
     ChatSocketService.emitRefreshOfOnlineStatus(Number(userId), true);
   }
   console.log('A new socket connection is established:', socket.id);
@@ -68,14 +68,33 @@ io.on('connection', (socket: CustomSocket) => {
   });
 
   socket.on('disconnect', () => {
-    connectedUsers.delete(Number(userId))
+    connectedUsers.delete(Number(userId));
     ChatSocketService.emitRefreshOfOnlineStatus(Number(userId), false);
     console.log('Socket disconnected:', socket.id);
   });
 });
 
-server.listen(port, () => {
-  console.log(`[server]: Server is running at https://localhost:${port}`);
+
+nextApp.prepare().then(() => {
+
+  // Serve Next.js frontend
+  app.get('/', (req, res) => {
+    return handle(req, res);
+  }); 
+
+  app.get('/home', (req, res) => {
+    return handle(req, res);
+  });
+  
+  app.use('/home', HomeRoutes);
+
+  app.all('*', (req, res) => {
+    return handle(req, res);
+  });
+
+  server.listen(3005, () => {
+    console.log(`[server]: Server is running at https://localhost:${3002}`);
+  });
 });
 
-export { io, connectedUsers }
+export { io, connectedUsers };

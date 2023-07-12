@@ -51,7 +51,8 @@ export class AuthController {
     return res
       .status(200)
       .clearCookie('jwt_token')
-      .json({ message: 'Cookie cleared' });
+      .json({ message: 'Cookie cleared' })
+      
   }
 }
 

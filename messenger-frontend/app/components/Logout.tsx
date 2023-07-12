@@ -11,7 +11,7 @@ export default function Logout() {
     });
 
     if (res.status == 200) {
-      router.push('/');
+      window.location.href = "/"
     }
   };
 
