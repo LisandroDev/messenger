@@ -12,8 +12,8 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "typeRoots": ["./types"]
+    "typeRoots": ["./types"],
+    "skipLibCheck": true
   },
   "ts-node": {
     "files": true

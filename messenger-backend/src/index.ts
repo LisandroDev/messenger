@@ -24,7 +24,7 @@ import { CustomSocket } from './types/custom';
 
 // Config
 dotenv.config();
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3016;
 const app: Express = express();
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_SERVER, credentials: true }));
@@ -42,7 +42,7 @@ app.use(specificErrorHandler);
 app.use(errorHandler);
 
 const dev = process.env.NODE_ENV === 'production';
-const nextApp = next({ dev: false, port: 3006 });
+const nextApp = next({ dev: false });
 const handle = nextApp.getRequestHandler();
 
 // Connection to socket
@@ -92,8 +92,8 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  server.listen(3005, () => {
-    console.log(`[server]: Server is running at https://localhost:${3002}`);
+  server.listen(port, () => {
+    console.log(`[server]: Server is running at https://localhost:${port}`);
   });
 });
 

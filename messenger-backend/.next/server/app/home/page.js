@@ -457,12 +457,12 @@ Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_re
 
 /***/ }),
 
-/***/ 6134:
+/***/ 2204:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 7649, 23));
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1878));
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 615))
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 615));
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1878))
 
 /***/ }),
 
@@ -483,7 +483,7 @@ __webpack_require__.r(__webpack_exports__);
 function Logout() {
     const router = (0,next_navigation__WEBPACK_IMPORTED_MODULE_1__.useRouter)();
     const onLogout = async ()=>{
-        const res = await fetch("http://localhost:3002/api/auth/logout", {
+        const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/auth/logout`, {
             method: "POST",
             credentials: "include"
         });
@@ -595,7 +595,7 @@ function MessageReceived({ message, date }) {
 var esm_debug = __webpack_require__(9117);
 ;// CONCATENATED MODULE: ./app/home/socket/socket.ts
 
-const URL =  true ? "http://localhost:3002" : 0;
+const URL =  true ? "https://messengerapp-27vj.onrender.com" : 0;
 const socket = (0,esm_debug.io)(URL, {
     withCredentials: true
 });
@@ -627,7 +627,7 @@ function ChatBox({ id }) {
     ]);
     (0,react_.useEffect)(()=>{
         const fetchMessages = async ()=>{
-            const res = await fetch(`${"http://localhost:3002"}/api/chat/getMessages/${id}`, {
+            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getMessages/${id}`, {
                 credentials: "include",
                 method: "GET",
                 cache: "default"
@@ -655,7 +655,7 @@ function ChatBox({ id }) {
     const sentMessage = async (message)=>{
         try {
             setLastMessageSent(message);
-            const res = await fetch(`${"http://localhost:3002"}/api/chat/createMessage`, {
+            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createMessage`, {
                 credentials: "include",
                 method: "POST",
                 headers: {
@@ -742,7 +742,7 @@ function ConversationBadge({ id, onSelect }) {
     const [messageCounter, setMessageCounter] = (0,react_.useState)(0);
     (0,react_.useEffect)(()=>{
         const fetchInformation = async ()=>{
-            const res = await fetch(`${"http://localhost:3002"}/api/chat/getInfoOfConversation/${id}`, {
+            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getInfoOfConversation/${id}`, {
                 credentials: "include",
                 method: "GET",
                 cache: "default"
@@ -849,7 +849,7 @@ function CreateConversation({ addConversation }) {
     };
     const createConversation = async (email)=>{
         try {
-            const res = await fetch(`${"http://localhost:3002"}/api/chat/createConversation`, {
+            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createConversation`, {
                 credentials: "include",
                 method: "POST",
                 headers: {
@@ -1013,7 +1013,7 @@ function EmptyChatBox() {
 
 ;// CONCATENATED MODULE: ./app/home/utils/getConversations.tsx
 const fetchConversations = ()=>{
-    const res = fetch(`${"http://localhost:3002"}/api/chat/getConversations`, {
+    const res = fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getConversations`, {
         method: "GET",
         credentials: "include"
     }).then((res)=>res.json()).catch((err)=>{

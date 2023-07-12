@@ -392,7 +392,7 @@ function AuthForm() {
             if (!data) {
                 return null;
             }
-            const res = await fetch(`${"http://localhost:3002"}/api/auth/register`, {
+            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -406,7 +406,7 @@ function AuthForm() {
                 return null;
             }
             try {
-                const res = await fetch(`${"http://localhost:3002"}/api/auth/login`, {
+                const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/auth/login`, {
                     method: "POST",
                     credentials: "include",
                     headers: {
