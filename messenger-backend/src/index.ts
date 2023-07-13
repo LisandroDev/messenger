@@ -82,11 +82,11 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  app.get('/home', (req, res) => {
+  app.get('/home', authenticateToken, (req, res) => {
     return handle(req, res);
   });
 
-  app.use('/home', HomeRoutes);
+  app.use('/home', authenticateToken, HomeRoutes);
 
   app.all('*', (req, res) => {
     return handle(req, res);
