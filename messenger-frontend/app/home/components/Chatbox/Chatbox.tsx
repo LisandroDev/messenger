@@ -5,6 +5,7 @@ import MessageSent from './MessageSent';
 import MessageReceived from './MessageReceived';
 import socket from '../../socket/socket';
 import { toast } from 'react-toastify';
+import fetcher from '../../utils/fetcher';
 
 interface ChatBoxProps {
   id: String;
@@ -34,7 +35,7 @@ export default function ChatBox({ id }: ChatBoxProps) {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const res = await fetch(
+      const res = await fetcher(
         `${
           process.env.NEXT_PUBLIC_BACKEND_SERVER as string
         }/api/chat/getMessages/${id}`,
@@ -57,7 +58,7 @@ export default function ChatBox({ id }: ChatBoxProps) {
 
   const sentMessage = async (message: string) => {
     try{ setLastMessageSent(message);
-      const res = await fetch(
+      const res = await fetcher(
         `${
           process.env.NEXT_PUBLIC_BACKEND_SERVER as string
         }/api/chat/createMessage`,

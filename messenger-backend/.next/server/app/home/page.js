@@ -453,16 +453,16 @@ __webpack_require__.r(__webpack_exports__);
 /***/ 410:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 3092))
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2409))
 
 /***/ }),
 
-/***/ 2204:
+/***/ 6134:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 Promise.resolve(/* import() eager */).then(__webpack_require__.t.bind(__webpack_require__, 7649, 23));
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 615));
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1878))
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 1878));
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 615))
 
 /***/ }),
 
@@ -536,7 +536,7 @@ function OpenModalSideBar() {
 
 /***/ }),
 
-/***/ 3092:
+/***/ 2409:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -603,8 +603,26 @@ const socket = (0,esm_debug.io)(URL, {
 
 // EXTERNAL MODULE: ./node_modules/react-toastify/dist/react-toastify.esm.mjs
 var react_toastify_esm = __webpack_require__(3578);
+;// CONCATENATED MODULE: ./app/home/utils/fetcher.ts
+function updateOptions(options) {
+    const update = {
+        ...options
+    };
+    if (sessionStorage.getItem("tokenjwt")) {
+        update.headers = {
+            ...update.headers,
+            Authorization: `Bearer ${sessionStorage.getItem("tokenjwt")}`
+        };
+    }
+    return update;
+}
+function fetcher(url, options) {
+    return fetch(url, updateOptions(options));
+}
+
 ;// CONCATENATED MODULE: ./app/home/components/Chatbox/Chatbox.tsx
 /* __next_internal_client_entry_do_not_use__ default auto */ 
+
 
 
 
@@ -627,7 +645,7 @@ function ChatBox({ id }) {
     ]);
     (0,react_.useEffect)(()=>{
         const fetchMessages = async ()=>{
-            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getMessages/${id}`, {
+            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getMessages/${id}`, {
                 credentials: "include",
                 method: "GET",
                 cache: "default"
@@ -655,7 +673,7 @@ function ChatBox({ id }) {
     const sentMessage = async (message)=>{
         try {
             setLastMessageSent(message);
-            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createMessage`, {
+            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createMessage`, {
                 credentials: "include",
                 method: "POST",
                 headers: {
@@ -735,6 +753,7 @@ function ChatBox({ id }) {
 
 
 
+
 function ConversationBadge({ id, onSelect }) {
     const [information, setInformation] = (0,react_.useState)();
     const [lastMessageFromSocket, setLastMessageFromSocket] = (0,react_.useState)("");
@@ -742,7 +761,7 @@ function ConversationBadge({ id, onSelect }) {
     const [messageCounter, setMessageCounter] = (0,react_.useState)(0);
     (0,react_.useEffect)(()=>{
         const fetchInformation = async ()=>{
-            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getInfoOfConversation/${id}`, {
+            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getInfoOfConversation/${id}`, {
                 credentials: "include",
                 method: "GET",
                 cache: "default"
@@ -842,6 +861,7 @@ function ConversationBadge({ id, onSelect }) {
 /* __next_internal_client_entry_do_not_use__ default auto */ 
 
 
+
 function CreateConversation({ addConversation }) {
     const [email, setEmail] = (0,react_.useState)("");
     const handleChange = (e)=>{
@@ -849,7 +869,7 @@ function CreateConversation({ addConversation }) {
     };
     const createConversation = async (email)=>{
         try {
-            const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createConversation`, {
+            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createConversation`, {
                 credentials: "include",
                 method: "POST",
                 headers: {
@@ -1012,8 +1032,9 @@ function EmptyChatBox() {
 }
 
 ;// CONCATENATED MODULE: ./app/home/utils/getConversations.tsx
+
 const fetchConversations = ()=>{
-    const res = fetch(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getConversations`, {
+    const res = fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getConversations`, {
         method: "GET",
         credentials: "include"
     }).then((res)=>res.json()).catch((err)=>{
@@ -1036,6 +1057,12 @@ function App() {
     const [conversations, setConversations] = (0,react_.useState)();
     const [selectedConversation, setSelectedConversation] = (0,react_.useState)("");
     const [isDesktop, setDesktop] = (0,react_.useState)(true);
+    (0,react_.useEffect)(()=>{
+        sessionStorage.getItem("tokenjwt");
+        if (!sessionStorage) {
+            window.location.href = "/";
+        }
+    });
     (0,react_.useEffect)(()=>{
         socket_socket.on("connect", ()=>{
             console.log("Socket connected:", socket_socket.id);

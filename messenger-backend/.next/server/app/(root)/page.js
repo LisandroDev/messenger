@@ -414,11 +414,13 @@ function AuthForm() {
                     },
                     body: JSON.stringify(data)
                 });
-                console.log(res.json());
+                const body = await res.json();
                 if (res.status === 200) {
+                    sessionStorage.setItem("tokenjwt", body.token);
                     router.push("/home");
                 }
             } catch (error) {
+                console.error(error);
                 console.error("Fail at login");
             }
         }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Conversation } from '@/app/types/interfaces';
 import {toast} from 'react-toastify'
+import fetcher from '../../utils/fetcher';
 interface CreateConversationProps{
   addConversation: (conversation: Conversation) => void;
 }
@@ -18,7 +19,7 @@ function CreateConversation({addConversation}: CreateConversationProps) {
 
   const createConversation = async (email: string) => {
     try{ 
-      const res = await fetch(
+      const res = await fetcher(
         `${
           process.env.NEXT_PUBLIC_BACKEND_SERVER as string
         }/api/chat/createConversation`,

@@ -49,8 +49,8 @@ const handle = nextApp.getRequestHandler();
 const connectedUsers = new Map<number, CustomSocket>();
 
 // Routes /api
-  app.use('/api/auth', AuthRoutes);
-  app.use('/api/chat', ChatRoutes);
+app.use('/api/auth', AuthRoutes);
+app.use('/api/chat', ChatRoutes);
 
 // Routes /home
 
@@ -74,18 +74,17 @@ io.on('connection', (socket: CustomSocket) => {
   });
 });
 
-
 nextApp.prepare().then(() => {
-
   // Serve Next.js frontend
+
   app.get('/', (req, res) => {
     return handle(req, res);
-  }); 
+  });
 
   app.get('/home', (req, res) => {
     return handle(req, res);
   });
-  
+
   app.use('/home', HomeRoutes);
 
   app.all('*', (req, res) => {

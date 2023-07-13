@@ -1,6 +1,7 @@
+import fetcher from "./fetcher";
 
 export const fetchConversations = () => {
-  const res = fetch(
+  const res = fetcher(
     `${
       process.env.NEXT_PUBLIC_BACKEND_SERVER as string
     }/api/chat/getConversations`,

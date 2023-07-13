@@ -9,11 +9,19 @@ import { Conversation } from '@/app/types/interfaces';
 import socket from './socket/socket';
 import { fetchConversations } from '@/app/home/utils/getConversations';
 import { toast } from 'react-toastify';
+import fetcher from './utils/fetcher';
 
 export default function App() {
   const [conversations, setConversations] = useState<Conversation[]>();
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [isDesktop, setDesktop] = useState<boolean>(true);
+
+  useEffect(() => {
+    sessionStorage.getItem('tokenjwt');
+    if(!sessionStorage){
+      window.location.href = '/'
+    }
+  })
 
   useEffect(() => {
     socket.on('connect', () => {
