@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef} from 'react';
 import MessageSent from './MessageSent';
 import MessageReceived from './MessageReceived';
-import socket from '../../socket/socket';
+import socket from '@/socket/socket';
 import { toast } from 'react-toastify';
 import fetcher from '../../utils/fetcher';
 

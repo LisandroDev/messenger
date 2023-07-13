@@ -453,7 +453,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ 410:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 2409))
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 9515))
 
 /***/ }),
 
@@ -536,7 +536,7 @@ function OpenModalSideBar() {
 
 /***/ }),
 
-/***/ 2409:
+/***/ 9515:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -593,13 +593,13 @@ function MessageReceived({ message, date }) {
 
 // EXTERNAL MODULE: ./node_modules/socket.io-client/build/esm-debug/index.js + 27 modules
 var esm_debug = __webpack_require__(9117);
-;// CONCATENATED MODULE: ./app/home/socket/socket.ts
+;// CONCATENATED MODULE: ./socket/socket.ts
 
 const URL =  true ? "https://messengerapp-27vj.onrender.com" : 0;
 const socket = (0,esm_debug.io)(URL, {
     withCredentials: true,
     extraHeaders: {
-        Authorization: `Bearer ${sessionStorage.getItem("tokenjwt")}`
+        Authorization: `Bearer ${ false ? 0 : ""}`
     }
 });
 /* harmony default export */ const socket_socket = (socket);
@@ -1060,12 +1060,6 @@ function App() {
     const [conversations, setConversations] = (0,react_.useState)();
     const [selectedConversation, setSelectedConversation] = (0,react_.useState)("");
     const [isDesktop, setDesktop] = (0,react_.useState)(true);
-    (0,react_.useEffect)(()=>{
-        sessionStorage.getItem("tokenjwt");
-        if (!sessionStorage) {
-            window.location.href = "/";
-        }
-    });
     (0,react_.useEffect)(()=>{
         socket_socket.on("connect", ()=>{
             console.log("Socket connected:", socket_socket.id);

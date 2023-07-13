@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { useEffect, useState } from 'react';
 import ChatBox from '@/app/home/components/Chatbox/Chatbox';
@@ -6,22 +6,16 @@ import Sidebar from '@/app/home/components/Sidebar/Sidebar';
 import ModalSideBar from './components/Sidebar/ModalSidebar';
 import EmptyChatBox from '@/app/home/components/Chatbox/EmptyChatBox';
 import { Conversation } from '@/app/types/interfaces';
-import socket from './socket/socket';
 import { fetchConversations } from '@/app/home/utils/getConversations';
 import { toast } from 'react-toastify';
-import fetcher from './utils/fetcher';
+import socket from '@/socket/socket';
 
 export default function App() {
   const [conversations, setConversations] = useState<Conversation[]>();
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [isDesktop, setDesktop] = useState<boolean>(true);
 
-  useEffect(() => {
-    sessionStorage.getItem('tokenjwt');
-    if(!sessionStorage){
-      window.location.href = '/'
-    }
-  })
+
 
   useEffect(() => {
     socket.on('connect', () => {

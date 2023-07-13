@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import socket from '../../socket/socket';
+import socket from '@/socket/socket';
 import { toast } from 'react-toastify'
 import fetcher from '../../utils/fetcher';
 
