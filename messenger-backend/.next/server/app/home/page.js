@@ -453,7 +453,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ 410:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 9515))
+Promise.resolve(/* import() eager */).then(__webpack_require__.bind(__webpack_require__, 6588))
 
 /***/ }),
 
@@ -536,7 +536,7 @@ function OpenModalSideBar() {
 
 /***/ }),
 
-/***/ 9515:
+/***/ 6588:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -606,23 +606,8 @@ const socket = (0,esm_debug.io)(URL, {
 
 // EXTERNAL MODULE: ./node_modules/react-toastify/dist/react-toastify.esm.mjs
 var react_toastify_esm = __webpack_require__(3578);
-;// CONCATENATED MODULE: ./app/home/utils/fetcher.ts
-function updateOptions(options) {
-    const update = {
-        ...options
-    };
-    if (sessionStorage.getItem("tokenjwt")) {
-        update.headers = {
-            ...update.headers,
-            Authorization: `Bearer ${sessionStorage.getItem("tokenjwt")}`
-        };
-    }
-    return update;
-}
-function fetcher(url, options) {
-    return fetch(url, updateOptions(options));
-}
-
+// EXTERNAL MODULE: ./app/home/utils/fetcher.ts
+var fetcher = __webpack_require__(5850);
 ;// CONCATENATED MODULE: ./app/home/components/Chatbox/Chatbox.tsx
 /* __next_internal_client_entry_do_not_use__ default auto */ 
 
@@ -648,7 +633,7 @@ function ChatBox({ id }) {
     ]);
     (0,react_.useEffect)(()=>{
         const fetchMessages = async ()=>{
-            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getMessages/${id}`, {
+            const res = await (0,fetcher/* default */.Z)(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getMessages/${id}`, {
                 credentials: "include",
                 method: "GET",
                 cache: "default"
@@ -676,7 +661,7 @@ function ChatBox({ id }) {
     const sentMessage = async (message)=>{
         try {
             setLastMessageSent(message);
-            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createMessage`, {
+            const res = await (0,fetcher/* default */.Z)(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createMessage`, {
                 credentials: "include",
                 method: "POST",
                 headers: {
@@ -764,7 +749,7 @@ function ConversationBadge({ id, onSelect }) {
     const [messageCounter, setMessageCounter] = (0,react_.useState)(0);
     (0,react_.useEffect)(()=>{
         const fetchInformation = async ()=>{
-            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getInfoOfConversation/${id}`, {
+            const res = await (0,fetcher/* default */.Z)(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getInfoOfConversation/${id}`, {
                 credentials: "include",
                 method: "GET",
                 cache: "default"
@@ -872,7 +857,7 @@ function CreateConversation({ addConversation }) {
     };
     const createConversation = async (email)=>{
         try {
-            const res = await fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createConversation`, {
+            const res = await (0,fetcher/* default */.Z)(`${"https://messengerapp-27vj.onrender.com"}/api/chat/createConversation`, {
                 credentials: "include",
                 method: "POST",
                 headers: {
@@ -1037,7 +1022,7 @@ function EmptyChatBox() {
 ;// CONCATENATED MODULE: ./app/home/utils/getConversations.tsx
 
 const fetchConversations = ()=>{
-    const res = fetcher(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getConversations`, {
+    const res = (0,fetcher/* default */.Z)(`${"https://messengerapp-27vj.onrender.com"}/api/chat/getConversations`, {
         method: "GET",
         credentials: "include"
     }).then((res)=>res.json()).catch((err)=>{
@@ -1276,7 +1261,7 @@ const __default__ = proxy.default;
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,346,117,427], () => (__webpack_exec__(1807)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,346,117,457], () => (__webpack_exec__(1807)));
 module.exports = __webpack_exports__;
 
 })();

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import fetcher from '@/app/home/utils/fetcher';
 
 type Variant = 'REGISTER' | 'LOGIN';
 
@@ -52,7 +53,7 @@ export default function AuthForm() {
         return null;
       }
       try{
-        const res = await fetch(
+        const res = await fetcher(
           `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/login`,
           {
             method: 'POST',

@@ -369,7 +369,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1031);
 /* harmony import */ var next_navigation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9483);
 /* harmony import */ var next_navigation__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_navigation__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _app_home_utils_fetcher__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5850);
 /* __next_internal_client_entry_do_not_use__ default auto */ 
+
 
 
 
@@ -406,7 +408,7 @@ function AuthForm() {
                 return null;
             }
             try {
-                const res = await fetch(`${"https://messengerapp-27vj.onrender.com"}/api/auth/login`, {
+                const res = await (0,_app_home_utils_fetcher__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z)(`${"https://messengerapp-27vj.onrender.com"}/api/auth/login`, {
                     method: "POST",
                     credentials: "include",
                     headers: {
@@ -628,7 +630,7 @@ function Auth() {
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [381,346,31,427], () => (__webpack_exec__(7845)));
+var __webpack_exports__ = __webpack_require__.X(0, [381,346,31,457], () => (__webpack_exec__(7845)));
 module.exports = __webpack_exports__;
 
 })();

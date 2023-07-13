@@ -1,5 +1,5 @@
-exports.id = 427;
-exports.ids = [427];
+exports.id = 457;
+exports.ids = [457];
 exports.modules = {
 
 /***/ 5429:
@@ -44,6 +44,32 @@ const ToasterContext = ()=>{
     return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(react_toastify__WEBPACK_IMPORTED_MODULE_1__/* .ToastContainer */ .Ix, {});
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ToasterContext);
+
+
+/***/ }),
+
+/***/ 5850:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (/* binding */ fetcher)
+/* harmony export */ });
+function updateOptions(options) {
+    const update = {
+        ...options
+    };
+    if (sessionStorage.getItem("tokenjwt")) {
+        update.headers = {
+            ...update.headers,
+            Authorization: `Bearer ${sessionStorage.getItem("tokenjwt")}`
+        };
+    }
+    return update;
+}
+function fetcher(url, options) {
+    return fetch(url, updateOptions(options));
+}
 
 
 /***/ }),
