@@ -82,7 +82,7 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  app.get('/home', authenticateToken, (req, res) => {
+  app.get('/home', (req, res) => {
     return handle(req, res);
   });
 
