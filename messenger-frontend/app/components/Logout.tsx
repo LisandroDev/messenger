@@ -11,6 +11,7 @@ export default function Logout() {
     });
 
     if (res.status == 200) {
+      sessionStorage.clear()
       window.location.href = "/"
     }
   };

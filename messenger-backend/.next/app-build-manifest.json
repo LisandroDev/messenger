@@ -1,39 +1,39 @@
 {
   "pages": {
     "/(root)/page": [
-      "static/chunks/webpack-9795b6496bcfa5d1.js",
+      "static/chunks/webpack-24209b28a24c2c7e.js",
       "static/chunks/bce60fc1-0382cce50b701033.js",
       "static/chunks/769-e4cf399983c400c0.js",
       "static/chunks/main-app-5d006e381e599263.js",
       "static/chunks/188-82cac3b8f631b6e4.js",
       "static/chunks/700-5f2abae9b19f339c.js",
-      "static/chunks/app/(root)/page-ec2f235a8a719ca1.js"
+      "static/chunks/app/(root)/page-c498f57bc879cbb7.js"
     ],
     "/layout": [
-      "static/chunks/webpack-9795b6496bcfa5d1.js",
+      "static/chunks/webpack-24209b28a24c2c7e.js",
       "static/chunks/bce60fc1-0382cce50b701033.js",
       "static/chunks/769-e4cf399983c400c0.js",
       "static/chunks/main-app-5d006e381e599263.js",
-      "static/css/54def04d2ff9d85a.css",
-      "static/chunks/app/layout-679c24020e5adbee.js"
+      "static/css/5cde74b5aab5d1d7.css",
+      "static/chunks/app/layout-de778ea003e7fa0f.js"
     ],
     "/loading": [
-      "static/chunks/webpack-9795b6496bcfa5d1.js",
+      "static/chunks/webpack-24209b28a24c2c7e.js",
       "static/chunks/bce60fc1-0382cce50b701033.js",
       "static/chunks/769-e4cf399983c400c0.js",
       "static/chunks/main-app-5d006e381e599263.js",
       "static/chunks/app/loading-2fd98bcca7a91579.js"
     ],
     "/home/layout": [
-      "static/chunks/webpack-9795b6496bcfa5d1.js",
+      "static/chunks/webpack-24209b28a24c2c7e.js",
       "static/chunks/bce60fc1-0382cce50b701033.js",
       "static/chunks/769-e4cf399983c400c0.js",
       "static/chunks/main-app-5d006e381e599263.js",
       "static/chunks/188-82cac3b8f631b6e4.js",
-      "static/chunks/app/home/layout-ae233148cd4cbf58.js"
+      "static/chunks/app/home/layout-acb3da758a1fb4c9.js"
     ],
     "/home/page": [
-      "static/chunks/webpack-9795b6496bcfa5d1.js",
+      "static/chunks/webpack-24209b28a24c2c7e.js",
       "static/chunks/bce60fc1-0382cce50b701033.js",
       "static/chunks/769-e4cf399983c400c0.js",
       "static/chunks/main-app-5d006e381e599263.js",

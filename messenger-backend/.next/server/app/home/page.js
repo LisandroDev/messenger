@@ -488,6 +488,7 @@ function Logout() {
             credentials: "include"
         });
         if (res.status == 200) {
+            sessionStorage.clear();
             window.location.href = "/";
         }
     };
