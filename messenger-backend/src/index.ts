@@ -21,6 +21,7 @@ import { errorHandler } from '@/middlewares/errors/error-handler';
 import { specificErrorHandler } from '@/middlewares/errors/specific-handler';
 import { authenticateSocketToken } from './middlewares/socket/authenticateSocketToken';
 import { CustomSocket } from './types/custom';
+import { authenticateToken } from './middlewares/auth/authenticate';
 
 // Config
 dotenv.config();
@@ -81,7 +82,7 @@ nextApp.prepare().then(() => {
     return handle(req, res);
   });
 
-  app.get('/home', (req, res) => {
+  app.get('/home', authenticateToken, (req, res) => {
     return handle(req, res);
   });
 

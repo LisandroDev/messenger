@@ -13,11 +13,12 @@ export function authenticateSocketToken(socket: CustomSocket, next: (err?: Error
   const cookie = socket.handshake.headers['cookie']?.split('jwt_token=')[1];
   const token = authHeader && authHeader.split(' ')[1];
 
-  if (!cookie) {
+  if (!cookie && !authHeader) {
     return next(new UnauthorizedError('Unauthorized'));
   }
 
-  const tokenAuthenticated = TokenManager.authenticateToken(cookie);
+  const tokenToAuthenticate = cookie !== undefined ? cookie : token !== undefined ? token : '';
+  const tokenAuthenticated = TokenManager.authenticateToken(tokenToAuthenticate);
 
   if (tokenAuthenticated) {
     socket.userId = tokenAuthenticated.userId;

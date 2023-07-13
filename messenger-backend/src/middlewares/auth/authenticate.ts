@@ -7,8 +7,6 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   const cookie = req.headers['cookie']?.split('jwt_token=')[1];
   const token = authHeader && authHeader.split(' ')[1];
 
-  console.log('token: ', token)
-
   if (!cookie && !authHeader) {
     throw new UnauthorizedError('Unauthorized');
   }

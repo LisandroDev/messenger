@@ -597,7 +597,10 @@ var esm_debug = __webpack_require__(9117);
 
 const URL =  true ? "https://messengerapp-27vj.onrender.com" : 0;
 const socket = (0,esm_debug.io)(URL, {
-    withCredentials: true
+    withCredentials: true,
+    extraHeaders: {
+        Authorization: `Bearer ${sessionStorage.getItem("tokenjwt")}`
+    }
 });
 /* harmony default export */ const socket_socket = (socket);
 
