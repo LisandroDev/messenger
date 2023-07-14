@@ -41,11 +41,16 @@ export default function App() {
   }, [conversations]);
 
   useEffect(() => {
-    fetchConversations()
+    if(sessionStorage.getItem('tokenjwt')){
+      fetchConversations()
       .then((response) => {
         setConversations(response.conversations);
       })
       .catch((error) => toast.error('Error at fetching conversations'));
+    } else {
+      window.location.href = '/'
+    }
+
   }, []);
 
   const onSelect = (value: string) => {

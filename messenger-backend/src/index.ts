@@ -38,10 +38,6 @@ const io = new Server(server, {
 // Add user id to socket
 io.use(authenticateSocketToken);
 
-// Errors Middlewares
-app.use(specificErrorHandler);
-app.use(errorHandler);
-
 const dev = process.env.NODE_ENV === 'production';
 const nextApp = next({ dev: false });
 const handle = nextApp.getRequestHandler();
@@ -91,6 +87,10 @@ nextApp.prepare().then(() => {
   app.all('*', (req, res) => {
     return handle(req, res);
   });
+
+  // Errors Middlewares
+  app.use(specificErrorHandler);
+  app.use(errorHandler);
 
   server.listen(port, () => {
     console.log(`[server]: Server is running at https://localhost:${port}`);
