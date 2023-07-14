@@ -2,9 +2,15 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { Rubik } from 'next/font/google';
 import ToasterContext from './context/Toaster';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 
 const inter = Inter({ subsets: ['latin'] });
-const rubik = Rubik({weight: ['400','500','800'],subsets:['latin'],style:['italic','normal']})
+const rubik = Rubik({
+  weight: ['400', '500', '800'],
+  subsets: ['latin'],
+  style: ['italic', 'normal'],
+});
 
 export const metadata = {
   title: 'Fake Messenger',
@@ -18,9 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html className={rubik.className} lang='en'>
-
       <body className={rubik.className}>
-      <ToasterContext />{children}</body>
+        <ToasterContext />
+        {children}
+      </body>
     </html>
   );
 }
