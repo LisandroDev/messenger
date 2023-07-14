@@ -9,20 +9,25 @@ interface CustomSocket extends Socket {
 
 // Middleware function
 export function authenticateSocketToken(socket: CustomSocket, next: (err?: Error) => void) {
-  const authHeader = socket.handshake.headers['authorization'];
-  const cookie = socket.handshake.headers['cookie']?.split('jwt_token=')[1];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!cookie && !authHeader) {
-    return next(new UnauthorizedError('Unauthorized'));
+  try{
+    const authHeader = socket.handshake.headers['authorization'];
+    const cookie = socket.handshake.headers['cookie']?.split('jwt_token=')[1];
+    const token = authHeader && authHeader.split(' ')[1];
+  
+    if (!cookie && !authHeader) {
+      return next(new UnauthorizedError('Unauthorized'));
+    }
+  
+    const tokenToAuthenticate = cookie !== undefined ? cookie : token !== undefined ? token : '';
+    const tokenAuthenticated = TokenManager.authenticateToken(tokenToAuthenticate);
+  
+    if (tokenAuthenticated) {
+      socket.userId = tokenAuthenticated.userId;
+    }
+  } catch(error){
+    next()
   }
 
-  const tokenToAuthenticate = cookie !== undefined ? cookie : token !== undefined ? token : '';
-  const tokenAuthenticated = TokenManager.authenticateToken(tokenToAuthenticate);
-
-  if (tokenAuthenticated) {
-    socket.userId = tokenAuthenticated.userId;
-  }
 
   next();
 }

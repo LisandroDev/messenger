@@ -1079,9 +1079,13 @@ function App() {
         conversations
     ]);
     (0,react_.useEffect)(()=>{
-        fetchConversations().then((response)=>{
-            setConversations(response.conversations);
-        }).catch((error)=>react_toastify_esm/* toast */.Am.error("Error at fetching conversations"));
+        if (sessionStorage.getItem("tokenjwt")) {
+            fetchConversations().then((response)=>{
+                setConversations(response.conversations);
+            }).catch((error)=>react_toastify_esm/* toast */.Am.error("Error at fetching conversations"));
+        } else {
+            window.location.href = "/";
+        }
     }, []);
     const onSelect = (value)=>{
         setSelectedConversation(value);
