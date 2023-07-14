@@ -12,12 +12,14 @@ interface CreateConversationProps{
 
 function CreateConversation({addConversation}: CreateConversationProps) {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: any) => {
     setEmail(e.currentTarget.value);
   };
 
   const createConversation = async (email: string) => {
+    setIsLoading(true);
     try{ 
       const res = await fetcher(
         `${
@@ -44,6 +46,7 @@ function CreateConversation({addConversation}: CreateConversationProps) {
     } catch(error) {
       toast.error('Error at create conversation')
     }
+    setIsLoading(false);
 
   };
 
@@ -53,9 +56,12 @@ function CreateConversation({addConversation}: CreateConversationProps) {
         onChange={handleChange}
         className='w-full  ring  ring-offset-base-100 ring-offset-2 rounded-md p-2'
         placeholder='Type friend email'
+        type="email"
+        disabled={isLoading}
       ></input>
       <button
         className='btn btn-sm btn-info'
+        disabled={isLoading}
         onClick={(e) => { 
           e.preventDefault();
           createConversation(email);

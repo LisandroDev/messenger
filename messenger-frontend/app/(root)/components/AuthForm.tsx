@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import fetcher from '@/app/home/utils/fetcher';
+import { toast } from 'react-toastify';
 
 type Variant = 'REGISTER' | 'LOGIN';
 
@@ -15,6 +16,7 @@ type FormFields = {
 
 export default function AuthForm() {
   const [variant, setVariant] = useState<Variant>('LOGIN');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const toggleVariant = () => {
@@ -33,19 +35,30 @@ export default function AuthForm() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    setIsLoading(true);
     if (variant === 'REGISTER') {
       if (!data) {
         return null;
       }
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/register`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/auth/register`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          }
+        );
+        if (res.status === 200) {
+          setVariant('LOGIN');
+          toast.success('Account created successfully');
+        } else {
+          toast.error('An error occurred');
         }
-      );
-      console.log(res.json());
+      } catch (error) {
+        toast.error('An error occurred');
+      }
+      setIsLoading(false);
     }
 
     if (variant === 'LOGIN') {
@@ -65,13 +78,16 @@ export default function AuthForm() {
         const body = await res.json();
         if (res.status === 200) {
           sessionStorage.setItem('tokenjwt', body.token);
+          toast.success('Login successful');
           router.push('/home');
           router.push('/home');
+        } else {
+          toast.error('An error occurred');
         }
       } catch (error) {
-        console.error(error);
-        console.error('Fail at login');
+        toast.error('An error occurred');
       }
+      setIsLoading(false);
     }
   };
 
@@ -93,7 +109,9 @@ export default function AuthForm() {
             <input
               id='name'
               type='text'
+              minLength={6}
               required
+              disabled={isLoading}
               {...register('name')}
               className='block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
@@ -112,6 +130,7 @@ export default function AuthForm() {
         <div>
           <input
             id='email'
+            disabled={isLoading}
             {...register('email')}
             type='email'
             required
@@ -130,6 +149,9 @@ export default function AuthForm() {
         <div className='mt-2'>
           <input
             id='password'
+            disabled={isLoading}
+            minLength={8}
+            maxLength={12}
             {...register('password')}
             type='password'
             required
@@ -141,6 +163,7 @@ export default function AuthForm() {
       <div>
         <button
           type='submit'
+          disabled={isLoading}
           className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
         >
           {variant === 'LOGIN' ? 'Sign In' : 'Sign Up'}

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
 import ChatBox from '@/app/home/components/Chatbox/Chatbox';
@@ -14,8 +14,6 @@ export default function App() {
   const [conversations, setConversations] = useState<Conversation[]>();
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [isDesktop, setDesktop] = useState<boolean>(true);
-
-
 
   useEffect(() => {
     socket.on('connect', () => {
